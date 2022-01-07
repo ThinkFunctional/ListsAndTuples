@@ -1,5 +1,5 @@
 # Name: Lists and Tuples Unit Test
-# Time: 1/6/2022 @ 1:18 pm
+# Time: 1/7/2022 @ 7:35 am
 
 # Helper Functions
 import operator as op
@@ -15,7 +15,7 @@ def elems_comp(a_list, b_list):
         if elem not in b_list:
             return False
     for elem in b_list:
-        if elem not in b_list:
+        if elem not in a_list:
             return False
     return True
 
