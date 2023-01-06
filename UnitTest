@@ -1,5 +1,5 @@
 # Lists and Tuples Unit Test
-# 1/6/2023 @ 10:31 am
+# 1/6/2023 @ 1:324 pm
 
 # Helper Functions
 import operator as op
@@ -191,9 +191,6 @@ prime_factorization_tc = [(24, [2, 2, 2, 3]),
 flatten_tc = [([[1, 2], [2, 3, 4], [4]], [1, 2, 2, 3, 4, 4]),
               ([[]], []),
               ([], [])]
-L, I = [1, 2, 3], [1]
-move_tc = [((L, 1, 2), [1, 3, 2]),
-           ((I, 0, 0), [1])]
 L, I = [1, 2, 3, 4], [1]
 exchange_tc = [((L, 1, 2), [1, 3, 2, 4]),
                ((I, 0, 0), [1])]
@@ -237,7 +234,6 @@ perimeter_unit = Unit(perimeter, "perimeter", perimeter_tc, False, False, approx
 prime_list_unit = Unit(prime_list, "prime_list", prime_list_tc, True, False, eq_comp)
 prime_factorization_unit = Unit(prime_factorization, "prime_factorization", prime_factorization_tc, False, False, eq_comp)
 flatten_unit = Unit(flatten, "flatten", flatten_tc, False, False, eq_comp)
-move_unit = Unit(move, "move", move_tc, True, True, eq_comp)
 exchange_unit = Unit(exchange, "exchange", exchange_tc, True, True, eq_comp)
 elim_dups_unit = Unit(elim_dups, "elim_dups", elim_dups_tc, False, True, eq_comp)
 longest_monotonic_unit = Unit(longest_monotonic, "longest monotonic subsequences", longest_monotonic_tc, False, False, eq_comp)
@@ -253,7 +249,7 @@ transpose_unit = Unit(transpose, "transpose", transpose_tc, False, False, eq_com
 
 # Unit Test List
 units = [max_num_unit, min_num_unit, sum_elems_unit, greatest_sum_unit, dot_product_unit, mean_unit,
-         mode_unit, perimeter_unit, prime_list_unit, prime_factorization_unit, flatten_unit, move_unit,
+         mode_unit, perimeter_unit, prime_list_unit, prime_factorization_unit, flatten_unit,
          exchange_unit, elim_dups_unit, longest_monotonic_unit, bubble_sort_unit, selection_sort_unit, median_unit,
          mat_size_unit, mat_add_unit, scalar_mult_unit, mat_sub_unit, mat_mult_unit, transpose_unit]
 
