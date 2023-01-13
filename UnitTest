@@ -1,5 +1,5 @@
 # Lists and Tuples Unit Test
-# 1/6/2023 @ 1:24 pm
+# 1/13/2023 @ 7:52 am
 
 # Helper Functions
 import operator as op
@@ -62,7 +62,7 @@ def build_arg_str(args, is_poly):
 
 class Unit():
 
-    def __init__(self, func, name, cases, is_polyadic, is_mutator, test_type):
+    def __init__(self, func, name, cases, is_polyadic, is_mutator, test_type, extra_credit = False):
         # If the function is polyadic, we need to * the input so that it unpacks.
         # If the function is a mutator, we don't ask for its return value.
         # Instead we compare the input after the function is called to the correct mutated value.
@@ -80,6 +80,7 @@ class Unit():
         self.is_mutator = is_mutator
         self.test_type = test_type
         self.score = 0
+        self.extra_credit = extra_credit
 
     def add_test(self, new_test):
         self.cases.append(new_test)
@@ -99,9 +100,14 @@ class UnitTest():
         pts_lost_dict = {}
         for unit in self.units:
             pts_lost_dict[unit.name] = 0
-            test_file.write("\nFunction: \"" + unit.name + "\"\n")
+            if unit.extra_credit:
+                header_str = "\nFunction: \"" + unit.name + "\"" + " (extra credit)\n"
+            else:
+                header_str = "\nFunction: \"" + unit.name + "\"\n"
+            test_file.write(header_str)
             for case in unit.cases:
-                self.num_tests += 1
+                if not unit.extra_credit:
+                    self.num_tests += 1
                 arg = case[0]
                 expected_value = case[1]
                 arg_str = build_arg_str(arg, unit.is_polyadic)
@@ -185,6 +191,7 @@ perimeter_tc = [(((1, 2), (1, 12), (-2, 0), (-12, 0)), 45.522263314818886),
                 (((1, 1), ), 0),
                 ((), 0)]
 prime_list_tc = [((1, 100), [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97])]
+last_in_sieve_tc = [(98765, 98737), (987654, 987631), (9876543, 9876527)]
 prime_factorization_tc = [(24, [2, 2, 2, 3]),
                           (1111149, [3, 3, 13, 9497]),
                           (23, [23])]
@@ -197,6 +204,12 @@ exchange_tc = [((L, 1, 2), [1, 3, 2, 4]),
 elim_dups_tc = [([3, 2, 1, 2, 1, 4, 3], [3, 2, 1, 4]),
                 ([3, 2, 1], [3, 2, 1]),
                 ([], [])]
+L, M, N = [], [1], [2, 1]
+O = [12, -12, 2, 3, -1, 6, 18, 24, -36]
+partition_tc = [(L, []),
+                (M, [1]),
+                (N, [1, 2]),
+                (O, [-12, -1, -36, 12, 2, 3, 6, 18, 24])]
 longest_monotonic_tc = [([8, 7, 0, 9, 8, 11, 11, 12, 3, 6, 2, 9, 4, 8, 12, 3, 6, 8, 5, 12, 5, 3, 12, 12, 5, 3, 5, 11, 3, 4, 11, 10, 11, 6, 6, 12], [[8, 11, 11, 12], [12, 12, 5, 3]]),
                         ([1], []),
                         ([], [])]
@@ -218,6 +231,9 @@ scalar_mult_tc = [((-3, [[1, 10, 5], [-9, -3, -2], [-3, 3, -4], [-11, 12, 6]]), 
 mat_sub_tc = [(([[-92, -58, 12], [16, 58, 8], [90, 36, -59], [91, -70, 57]], [[-49, -33, -86], [27, 94, -88], [43, 60, 19], [-99, 26, 37]]), [[-43, -25, 98], [-11, -36, 96], [47, -24, -78], [190, -96, 20]])]
 mat_mult_tc = [(([[4, 8, -2], [-3, -5, 3], [-7, 3, 2], [9, 2, -4]], [[12, -9, 3, -2], [8, 2, -10, 7], [-3, 5, 9, 9]]), [[118, -30, -86, 30], [-85, 32, 68, -2], [-66, 79, -33, 53], [136, -97, -29, -40]])]
 transpose_tc = [([[-7, 2, 11, 3, 11], [9, 8, -1, -7, 3], [-8, -8, 9, 4, 10], [-11, 5, 3, -3, 5]], [[-7, 9, -8, -11], [2, 8, -8, 5], [11, -1, 9, 3], [3, -7, 4, -3], [11, 3, 10, 5]])]
+det_tc = [([[1, 3], [1, 4]], 1),
+          ([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]], 0),
+          ([[2, 5, -3, 2], [-8, -2, 7, 6], [-9, -11, 12, 8], [10, -8, -4, -1]], 363)]
 
 # Create Units
 # This block will cause a crash if you haven't created all of the required functions.
@@ -232,10 +248,12 @@ mean_unit = Unit(mean, "mean", mean_tc, False, False, eq_comp)
 mode_unit = Unit(mode, "mode", mode_tc, False, False, eq_comp)
 perimeter_unit = Unit(perimeter, "perimeter", perimeter_tc, False, False, approx_eq)
 prime_list_unit = Unit(prime_list, "prime_list", prime_list_tc, True, False, eq_comp)
+last_in_sieve_unit = Unit(last_in_sieve, "last in sieve", last_in_sieve_tc, False, False, eq_comp, True)
 prime_factorization_unit = Unit(prime_factorization, "prime_factorization", prime_factorization_tc, False, False, eq_comp)
 flatten_unit = Unit(flatten, "flatten", flatten_tc, False, False, eq_comp)
 exchange_unit = Unit(exchange, "exchange", exchange_tc, True, True, eq_comp)
 elim_dups_unit = Unit(elim_dups, "elim_dups", elim_dups_tc, False, True, eq_comp)
+partition_unit = Unit(partition, "partition", partition_tc, False, True, eq_comp)
 longest_monotonic_unit = Unit(longest_monotonic, "longest monotonic subsequences", longest_monotonic_tc, False, False, eq_comp)
 bubble_sort_unit = Unit(bubble_sort, "bubble_sort", bubble_sort_tc, False, True, eq_comp)
 selection_sort_unit = Unit(selection_sort, "selection_sort", selection_sort_tc, False, True, eq_comp)
@@ -246,12 +264,14 @@ scalar_mult_unit = Unit(scalar_mult, "scalar multiplication", scalar_mult_tc, Tr
 mat_sub_unit = Unit(mat_sub, "matrix subtraction", mat_sub_tc, True, False, eq_comp)
 mat_mult_unit = Unit(mat_mult, "matrix multiplication", mat_mult_tc, True, False, eq_comp)
 transpose_unit = Unit(transpose, "transpose", transpose_tc, False, False, eq_comp)
+det_unit = Unit(det, "determinant", det_tc, False, False, eq_comp, True)
 
 # Unit Test List
 units = [max_num_unit, min_num_unit, sum_elems_unit, greatest_sum_unit, dot_product_unit, mean_unit,
-         mode_unit, perimeter_unit, prime_list_unit, prime_factorization_unit, flatten_unit,
-         exchange_unit, elim_dups_unit, longest_monotonic_unit, bubble_sort_unit, selection_sort_unit, median_unit,
-         mat_size_unit, mat_add_unit, scalar_mult_unit, mat_sub_unit, mat_mult_unit, transpose_unit]
+         mode_unit, perimeter_unit, prime_list_unit, last_in_sieve_unit, prime_factorization_unit, flatten_unit,
+         exchange_unit, elim_dups_unit, partition_unit, longest_monotonic_unit, bubble_sort_unit,
+         selection_sort_unit, median_unit, mat_size_unit, mat_add_unit, scalar_mult_unit, mat_sub_unit,
+         mat_mult_unit, transpose_unit, det_unit]
 
 # Create Unit Test
 unit_test = UnitTest("Lists and Tuples Unit Test", units)
